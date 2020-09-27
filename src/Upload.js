@@ -6,6 +6,7 @@ import firebase from 'firebase';
 
 const Upload = ({username}) => {
 
+    console.log(username);
     const [image, setimage] = useState(null);
     const [progress, setprogress] = useState(0);
     const [caption, setcaption] = useState('');

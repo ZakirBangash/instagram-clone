@@ -10,8 +10,6 @@ import Button from "@material-ui/core/Button";
 import { Input } from "@material-ui/core";
 import Upload from "./Upload";
 
-
-
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -33,22 +31,29 @@ function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [openSignIn, setopenSignIn] = useState(false);
 
   // useEffect Hook for getting all posts from Firebase
   useEffect(() => {
-    db.collection("posts").orderBy('timestamp','desc').onSnapshot((snapshot) => {
+    db.collection("posts").onSnapshot((snapshot) => {
       // every time a new post added,this code fires
       setPost(snapshot.docs.map((doc) => doc.data()));
     });
   }, []);
 
   useEffect(() => {
+    console.log("use1");
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
+        console.log(authUser);
+        console.log("auth ha");
         // User is signed in.
         setUser(authUser);
       } else {
         // User is signed out.
+        console.log("out");
         setUser(null);
       }
     });
@@ -57,35 +62,27 @@ function App() {
       //  cleanup
       unsubscribe();
     };
-  }, [user, username]);
-
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [openSignIn, setopenSignIn] = useState(false);
-
+  }, [user,username]);
 
   // This function for opening SignUp modal
-  const  signUpOpen = () => {
+  const signUpOpen = () => {
     setOpen(true);
   };
 
-// This function for closing SignUp modal
+  // This function for closing SignUp modal
   const signUpClose = () => {
     setOpen(false);
   };
 
   // This function for opening SignIn modal
-  const  signInOpen = () => {
+  const signInOpen = () => {
     setopenSignIn(true);
   };
 
-// This function for closing SignIn modal
+  // This function for closing SignIn modal
   const signInClose = () => {
     setopenSignIn(false);
   };
-
-
-
 
   // This function will fire when we submit the button of modal
   const signUp = (event) => {
@@ -94,9 +91,13 @@ function App() {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((result) => {
+        console.log(username)
         return result.user.updateProfile({
-          displayName: username,
-        });
+          displayName:username
+        }
+          
+        
+        );
       })
       .catch(function (error) {
         // Handle Errors here.
@@ -110,25 +111,20 @@ function App() {
 
   const signIn = (e) => {
     e.preventDefault();
+  
+    auth.signInWithEmailAndPassword(email, password)
+      .catch(function (error) {
+        // Handle Errors here.
+        var errorMessage = error.message;
+        alert(errorMessage);
 
-    auth.signInWithEmailAndPassword(email, password).then((result) => {
-      return result.user.updateProfile({
-        displayName: username,
+        // ...
       });
-    }).catch(function(error) {
-      // Handle Errors here.
-      var errorMessage = error.message;
-      alert(errorMessage);
 
-      // ...
-    });
-    
     setopenSignIn(false);
+  };
 
-  }
-
-
-
+  console.log("Good that's great");
   return (
     <div className="App">
       <div className="app__header">
@@ -138,15 +134,14 @@ function App() {
           alt=""
         />
           
-           {user?.displayName?(
-              <Upload  username={user.displayName}/>
-           ):(
-             <h3>Sorry you need to login to upload</h3>
-           )}
-           {
-             console.log(user)
-           }
+        {user?.displayName?(
+          <Upload username={user.displayName} />
          
+        ) : (
+          <h3>Sorry you need to login to upload</h3>
+        )}
+      
+
         {user ? (
           <Button
             className="modal__button"
@@ -157,27 +152,21 @@ function App() {
           </Button>
         ) : (
           <div className="app_signInButton">
-            <Button className="modal__button" type="button" onClick={signInOpen}>
-            SignIn
-          </Button>
+            <Button className="modal__button" onClick={signInOpen}>
+              SignIn
+            </Button>
 
-          <Button className="modal__button" type="button" onClick={signUpOpen}>
-            SignUp
-          </Button>
-
+            <Button className="modal__button" onClick={signUpOpen}>
+              SignUp
+            </Button>
           </div>
-
-
         )}
- 
- 
-  
-   
       </div>
-        
+
       <h1>
         Hello Clever Programmers , i React developer doing instagram clone
       </h1>
+
       {post.map(({ username, imageUrl, caption }) => {
         return (
           <Posts imageUrl={imageUrl} UserName={username} Caption={caption} />
@@ -194,7 +183,7 @@ function App() {
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
-        }} 
+        }}
       >
         <Fade in={open}>
           <div className={classes.paper}>
@@ -245,7 +234,6 @@ function App() {
         </Fade>
       </Modal>
 
-
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -268,7 +256,6 @@ function App() {
             </center>
 
             <form className="app__modal__form">
-             
               <Input
                 className="input"
                 value={email}
@@ -290,7 +277,6 @@ function App() {
                 className="input sign"
                 onClick={signIn}
                 variant="contained"
-              
                 fullWidth={true}
               >
                 SignIn
@@ -299,8 +285,6 @@ function App() {
           </div>
         </Fade>
       </Modal>
-
-
     </div>
   );
 }

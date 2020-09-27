@@ -4,6 +4,7 @@ import Avatar from '@material-ui/core/Avatar';
 
 const Posts = ({imageUrl,Caption,UserName}) => {
     
+
     return (
         <div className="post">
             <div className="post__header">
