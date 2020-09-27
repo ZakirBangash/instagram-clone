@@ -27,9 +27,6 @@
   font-size: 16px !important;
 }
 
-
-
-
 .sign {
   margin-top: 10px !important;
 }
@@ -37,4 +34,8 @@
 .input {
   padding: 5px !important;
   margin-bottom: 10px !important;
+}
+
+.app__image {
+      object-fit: contain;
 }
