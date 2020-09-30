@@ -3,6 +3,7 @@ import Button from "@material-ui/core/Button";
 import { Input } from "@material-ui/core";
 import { db, auth,storage } from "./firebase";
 import firebase from 'firebase';
+import './Upload.css';
 
 const Upload = ({username}) => {
 
@@ -71,8 +72,8 @@ const Upload = ({username}) => {
     }
 
     return (
-        <div>
-            <progress max='100' value={progress} />
+        <div className='upload__image'>
+            <progress className="upload__progress" max='100' value={progress} />
             <Input type='text' value={caption} onChange={(e)=> setcaption(e.target.value)} placeholder="Enter a Caption ..." />
             <Input type='file' placeholder="Enter a Caption ..." onChange={handleChange} />
             {image?(

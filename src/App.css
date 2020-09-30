@@ -14,11 +14,23 @@
 }
 .app__header {
   display: flex;
+  position: sticky;
   background-color: white;
   padding: 20px;
   justify-content: space-around;
   border-bottom: 1px solid lightgray;
   object-fit: contain;
+}
+
+.app__posts {
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+  
+}
+
+.post__right {
+  margin-top: 40px;
 }
 
 .modal__button {

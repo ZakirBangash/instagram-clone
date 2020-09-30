@@ -9,6 +9,7 @@ import Fade from "@material-ui/core/Fade";
 import Button from "@material-ui/core/Button";
 import { Input } from "@material-ui/core";
 import Upload from "./Upload";
+import InstagramEmbed from "react-instagram-embed";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -39,7 +40,11 @@ function App() {
   useEffect(() => {
     db.collection("posts").onSnapshot((snapshot) => {
       // every time a new post added,this code fires
-      setPost(snapshot.docs.map((doc) => doc.data()));
+      setPost(snapshot.docs.map((doc) =>({
+        id: doc.id,
+        post: doc.data()
+      })));
+
     });
   }, []);
 
@@ -62,7 +67,7 @@ function App() {
       //  cleanup
       unsubscribe();
     };
-  }, [user,username]);
+  }, [user, username]);
 
   // This function for opening SignUp modal
   const signUpOpen = () => {
@@ -80,10 +85,9 @@ function App() {
   };
 
   // This function for closing SignIn modal
-  const signInClose = ()  => {
+  const signInClose = () => {
     setopenSignIn(false);
   };
-
 
   // This function will fire when we submit the button of modal
   const signUp = (event) => {
@@ -93,11 +97,9 @@ function App() {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((result) => {
-        
         return result.user.updateProfile({
-          displayName:username
-        }
-        );
+          displayName: username,
+        });
       })
       .catch(function (error) {
         // Handle Errors here.
@@ -111,15 +113,14 @@ function App() {
 
   const signIn = (e) => {
     e.preventDefault();
-  
-    auth.signInWithEmailAndPassword(email, password)
-      .catch(function (error) {
-        // Handle Errors here.
-        var errorMessage = error.message;
-        alert(errorMessage);
 
-        // ...
-      });
+    auth.signInWithEmailAndPassword(email, password).catch(function (error) {
+      // Handle Errors here.
+      var errorMessage = error.message;
+      alert(errorMessage);
+
+      // ...
+    });
 
     setopenSignIn(false);
   };
@@ -132,14 +133,8 @@ function App() {
           src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
           alt=""
         />
-         { console.log(user &&  user.displayName)}
-        {user?.displayName?(
-          <Upload username={user.displayName} />
-         
-        ) : (
-          <h3>Sorry you need to login to upload</h3>
-        )}
-      
+        {console.log(user && user.displayName)}
+
         {user ? (
           <Button
             className="modal__button"
@@ -150,7 +145,6 @@ function App() {
           </Button>
         ) : (
           <div className="app_signInButton">
-           
             <Button className="modal__button" onClick={signInOpen}>
               SignIn
             </Button>
@@ -162,17 +156,37 @@ function App() {
         )}
       </div>
 
-      <h1>
-        Hello Clever Programmers, i React developer doing instagram clone
-      </h1>
 
-      {post.map(({ username, imageUrl, caption }) => {
-        
+          <div className="app__posts">
+            <div className="post__left">
+      {post.map(({id, post:{ username, imageUrl, caption }}) => {
         return (
-          <Posts imageUrl={imageUrl} UserName={username} caption={caption} />
+          <Posts key={id} postId={id} imageUrl={imageUrl} UserName={username} caption={caption} />
         );
       })}
+      </div>
 
+ <div className="post__right">
+      <InstagramEmbed
+        url="https://instagr.am/p/Zw9o4/"
+        maxWidth={320}
+        hideCaption={false}
+        containerTagName="div"
+        protocol=""
+        injectScript
+        onLoading={() => {}}
+        onSuccess={() => {}}
+        onAfterRender={() => {}}
+        onFailure={() => {}}
+      />
+      </div>
+      </div>
+
+      {user?.displayName ? (
+        <Upload username={user.displayName} />
+      ) : (
+        <h3>Sorry you need to login to upload</h3>
+      )}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
