@@ -2,7 +2,7 @@ import React from 'react'
 import "./Post.css";
 import Avatar from '@material-ui/core/Avatar';
 
-const Posts = ({imageUrl,Caption,UserName}) => {
+const Posts = ({imageUrl,caption,UserName}) => {
     
 
     return (
@@ -13,7 +13,7 @@ const Posts = ({imageUrl,Caption,UserName}) => {
             </div>
            
             <img className="post__image" src={imageUrl} alt="Instagram Image" />
-    <h4 className="post__text"><strong>{UserName}:</strong> {Caption}</h4>
+    <h4 className="post__text"><strong>{UserName}:</strong> {caption}</h4>
         </div>
     )
 }

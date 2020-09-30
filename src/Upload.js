@@ -50,12 +50,13 @@ const Upload = ({username}) => {
             .then( url => {
                 // post image inside Database
                 db.collection("posts").add({
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp,
+                    // timestamp: firebase.firestore.FieldValue.serverTimestamp,
                     imageUrl:url,
-                    Caption:caption,
+                    caption:caption,
                     username:username
 
                 });
+                console.log('control is in upload');
                 setprogress(0);
                 setcaption('');
                 setimage(null);
@@ -74,7 +75,12 @@ const Upload = ({username}) => {
             <progress max='100' value={progress} />
             <Input type='text' value={caption} onChange={(e)=> setcaption(e.target.value)} placeholder="Enter a Caption ..." />
             <Input type='file' placeholder="Enter a Caption ..." onChange={handleChange} />
-            <Button onClick={handleUpload}>Upload</Button>
+            {image?(
+                <Button onClick={handleUpload}>Upload</Button>
+            ):
+              <Button disabled onClick={handleUpload}>Upload</Button>
+            }
+            
         </div>
     )
 }

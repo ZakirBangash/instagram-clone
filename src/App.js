@@ -80,23 +80,23 @@ function App() {
   };
 
   // This function for closing SignIn modal
-  const signInClose = () => {
+  const signInClose = ()  => {
     setopenSignIn(false);
   };
+
 
   // This function will fire when we submit the button of modal
   const signUp = (event) => {
     event.preventDefault();
+
     // create user with email and password and update the display name which is null initially
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((result) => {
-        console.log(username)
+        
         return result.user.updateProfile({
           displayName:username
         }
-          
-        
         );
       })
       .catch(function (error) {
@@ -124,7 +124,6 @@ function App() {
     setopenSignIn(false);
   };
 
-  console.log("Good that's great");
   return (
     <div className="App">
       <div className="app__header">
@@ -133,7 +132,7 @@ function App() {
           src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
           alt=""
         />
-          
+         { console.log(user &&  user.displayName)}
         {user?.displayName?(
           <Upload username={user.displayName} />
          
@@ -141,7 +140,6 @@ function App() {
           <h3>Sorry you need to login to upload</h3>
         )}
       
-
         {user ? (
           <Button
             className="modal__button"
@@ -152,6 +150,7 @@ function App() {
           </Button>
         ) : (
           <div className="app_signInButton">
+           
             <Button className="modal__button" onClick={signInOpen}>
               SignIn
             </Button>
@@ -164,12 +163,13 @@ function App() {
       </div>
 
       <h1>
-        Hello Clever Programmers , i React developer doing instagram clone
+        Hello Clever Programmers, i React developer doing instagram clone
       </h1>
 
       {post.map(({ username, imageUrl, caption }) => {
+        
         return (
-          <Posts imageUrl={imageUrl} UserName={username} Caption={caption} />
+          <Posts imageUrl={imageUrl} UserName={username} caption={caption} />
         );
       })}
 
